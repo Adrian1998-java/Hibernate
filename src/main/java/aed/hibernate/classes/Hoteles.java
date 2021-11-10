@@ -1,5 +1,7 @@
 package aed.hibernate.classes;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Hoteles")
-public class Hoteles {
+public class Hoteles implements Serializable{
 	@Id
 	@Column(columnDefinition = "char(6)")
 	String codHotel;

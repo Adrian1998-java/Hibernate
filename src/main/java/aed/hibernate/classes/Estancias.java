@@ -1,5 +1,6 @@
 package aed.hibernate.classes;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "estancias")
-public class Estancias {
+public class Estancias implements Serializable{
 
 	@Id
 	@Column(columnDefinition = "integer")
