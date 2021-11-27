@@ -3,55 +3,89 @@ package aed.hibernate.classes;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "estancias")
-public class Estancias implements Serializable{
+public class Estancias implements Serializable {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "integer")
 	int codEstancia;
-	
-	@Id
-	@Column(columnDefinition = "char(9)")
-	String codDNIoNIE;
 
-	@Id
-	@Column(columnDefinition = "integer")
-	int codHabitacion;
-	
-	@Id
 	@Column(columnDefinition = "date")
-	Date fechaIncio;
-	
-	@Id
+	Date fechaInicio;
+
 	@Column(columnDefinition = "date")
 	Date fechaFin;
-	
-	@Id
-	@Column(columnDefinition = "integer")
-	int codRegimen;
-	
-	@Id
+
 	@Column(columnDefinition = "smallint")
 	int ocupantes;
-	
-	@Id
+
 	@Column(columnDefinition = "integer")
 	int precioestancia;
-	
-	@Id
-	@Column(columnDefinition = "tinyint")
+
+	@Column(columnDefinition = "bit")
 	int pagado;
 
 	// AQUI VAN LAS RELACIONES
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "CodHabitacion")
+	private Habitaciones habitacionObj;
+
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@JoinColumn(name = "CodRegimen")
+	private Regimenes regimenObj;
+
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@JoinColumn(name = "codDNIoNIE", referencedColumnName = "codDNIoNIE")
+	private Clientes codDNIoNIEObj;
 
 	//
-	
+	public int getPagado() {
+		return pagado;
+	}
+
+	public void setPagado(int pagado) {
+		this.pagado = pagado;
+	}
+
+	public Habitaciones getHabitacionObj() {
+		return habitacionObj;
+	}
+
+	public void setHabitacionObj(Habitaciones habitacionObj) {
+		this.habitacionObj = habitacionObj;
+	}
+
+	public Regimenes getRegimenObj() {
+		return regimenObj;
+	}
+
+	public void setRegimenObj(Regimenes regimenObj) {
+		this.regimenObj = regimenObj;
+	}
+
+	public Clientes getCodDNIoNIEObj() {
+		return codDNIoNIEObj;
+	}
+
+	public void setCodDNIoNIEObj(Clientes codDNIoNIEObj) {
+		this.codDNIoNIEObj = codDNIoNIEObj;
+	}
+
+
+
 	public int getCodEstancia() {
 		return codEstancia;
 	}
@@ -60,28 +94,12 @@ public class Estancias implements Serializable{
 		this.codEstancia = codEstancia;
 	}
 
-	public String getCodDNIoNIE() {
-		return codDNIoNIE;
+	public Date getFechaInicio() {
+		return fechaInicio;
 	}
 
-	public void setCodDNIoNIE(String codDNIoNIE) {
-		this.codDNIoNIE = codDNIoNIE;
-	}
-
-	public int getCodHabitacion() {
-		return codHabitacion;
-	}
-
-	public void setCodHabitacion(int codHabitacion) {
-		this.codHabitacion = codHabitacion;
-	}
-
-	public Date getFechaIncio() {
-		return fechaIncio;
-	}
-
-	public void setFechaIncio(Date fechaIncio) {
-		this.fechaIncio = fechaIncio;
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
 	}
 
 	public Date getFechaFin() {
@@ -90,14 +108,6 @@ public class Estancias implements Serializable{
 
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
-	}
-
-	public int getCodRegimen() {
-		return codRegimen;
-	}
-
-	public void setCodRegimen(int codRegimen) {
-		this.codRegimen = codRegimen;
 	}
 
 	public int getOcupantes() {
@@ -116,13 +126,4 @@ public class Estancias implements Serializable{
 		this.precioestancia = precioestancia;
 	}
 
-	public int getPagado() {
-		return pagado;
-	}
-
-	public void setPagado(int pagado) {
-		this.pagado = pagado;
-	}
-	
-	
 }

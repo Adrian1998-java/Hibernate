@@ -1,4 +1,4 @@
-package aed.hibernate.util;
+package aed.hibernate.classes;
 
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
@@ -15,7 +15,7 @@ public class HibernateUtil {
 	        try {
 	            // Create the SessionFactory from hibernate.cfg.xml
 	            StandardServiceRegistry standardRegistry = new StandardServiceRegistryBuilder() 
-	            												.configure("/resources/hibernate.cfg.xml")
+	            												.configure("hibernate.cfg.xml")
 	            												.build();
 	            Metadata metadata = new MetadataSources(standardRegistry)
 	            		.getMetadataBuilder()
