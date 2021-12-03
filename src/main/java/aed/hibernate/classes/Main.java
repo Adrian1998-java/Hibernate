@@ -66,9 +66,10 @@ public class Main {
 		int valor = 99;
 		int hO = 10;
 
-		sesion.beginTransaction();
+		
 		while (valor != 0) {
-			System.out.println("Elija el valor que quiera modificar: ");
+			
+			System.out.println("Elija el valor que quiera insertar: ");
 			System.out.println("(1) Hoteles");
 			System.out.println("(2) Habitaciones");
 			System.out.println("(3) Regimenes");
@@ -82,15 +83,20 @@ public class Main {
 
 				switch (valor) {
 				case 1:
+					sesion.beginTransaction();
+					
 					Hoteles hotel1 = new Hoteles();
-					System.out.print("CodCliente ->");
+					System.out.print("CodHotel ->");
 					hotel1.setCodHotel(in.next());
-					System.out.print("CodCliente ->");
+					System.out.print("NomHotel ->");
 					hotel1.setNomHotel(in.next());
 
 					sesion.persist(hotel1);
+					sesion.getTransaction().commit();
 					break;
 				case 2:
+					sesion.beginTransaction();
+					
 					Habitaciones habitacion1 = new Habitaciones();
 					System.out.println("Codhabitacion es AUTONUMERICO");
 					System.out.print("NumHabitacion -> ");
@@ -109,7 +115,8 @@ public class Main {
 					hO = in.nextInt();
 					if (hO == 1) {
 						HabitacionesObservaciones habObs = new HabitacionesObservaciones();
-						habObs.setHabitacion(sesion.get(Habitaciones.class, in.nextInt()));
+						System.out.println("CodHabitacion ya está asignado");
+						habObs.setHabitacion(sesion.get(Habitaciones.class, habitacion1.getCodHabitacion()));
 						System.out.print("Observacion -> ");
 						habObs.setObservaciones(in.next());
 
@@ -117,11 +124,13 @@ public class Main {
 					}
 
 					else {
-						System.out.print("Ha decidido no añadir Obrsevaciones");
+						System.out.println("Ha decidido no añadir Obrsevaciones");
 					}
-
+					sesion.getTransaction().commit();
 					break;
 				case 3:
+					sesion.beginTransaction();
+					
 					Regimenes regimen1 = new Regimenes();
 					System.out.println("CodRegimen es AUTONUMERICO");
 					System.out.print("Tipo -> ");
@@ -132,9 +141,12 @@ public class Main {
 					regimen1.setHotelObj(sesion.get(Hoteles.class, in.next()));
 
 					sesion.persist(regimen1);
+					sesion.getTransaction().commit();
 
 					break;
 				case 4:
+					sesion.beginTransaction();
+					
 					Clientes cliente1 = new Clientes();
 					System.out.print("CodCliente ->");
 					cliente1.setCodDNIoNIE(in.next());
@@ -144,8 +156,11 @@ public class Main {
 					cliente1.setNacionalidad(in.next());
 
 					sesion.persist(cliente1);
+					sesion.getTransaction().commit();
 					break;
 				case 5:
+					sesion.beginTransaction();
+					
 					Estancias estancia1 = new Estancias();
 					System.out.println("CodEstancia es AUTONUMERICO");
 					System.out.print("DNI ->");
@@ -169,13 +184,17 @@ public class Main {
 					estancia1.setPagado(in.nextInt());
 
 					sesion.persist(estancia1);
+					sesion.getTransaction().commit();
 					break;
 				case 0:
 					break;
 				}
+				
+
 			} catch (Exception e) {
 				System.err.print("Ha ocurrido el siguiente error: ");
 				e.printStackTrace();
+				sesion.getTransaction().rollback();
 			}
 		}
 
@@ -211,6 +230,7 @@ public class Main {
 			sesion.beginTransaction();
 
 			Habitaciones habitacion = new Habitaciones();
+			System.out.print("Inserte el código de la habitación que quiera modificar -> ");
 			habitacion = (Habitaciones) sesion.get(Habitaciones.class, in.nextInt());
 			System.out.print("NumHabitacion -> ");
 			habitacion.setNumHabitacion(in.next());
@@ -221,7 +241,7 @@ public class Main {
 			System.out.print("Activa (Si = 1 / No = 0) -> ");
 			habitacion.setActiva(in.nextInt());
 
-			sesion.update(habitacion);
+			sesion.update(habitacion); 
 
 			sesion.getTransaction().commit();
 
@@ -265,8 +285,9 @@ public class Main {
 					System.out.println("Obersevacion: " + h.getHabitacionObs().getObservaciones());
 				}
 				System.out.println("|-------------------------------------/");
-				sesion.getTransaction().commit();
+
 			}
+			sesion.getTransaction().commit();
 
 		} catch (Exception e) {
 			System.err.print("Ha ocurrido el siguiente error: ");
@@ -290,20 +311,25 @@ public class Main {
 				System.out.println("Nombre de Hotel: " + h.getHotelObj().getNomHotel());
 				System.out.println("NumHabitacion: " + h.getNumHabitacion());
 
-				System.out.println("Esta habitacione tiene " + h.getEstancias().size() + " estancia(s)");
-				for (Estancias e : h.getEstancias()) {
-					System.out.println("|**********************************|");
-					System.out.println("DNI: " + e.getCodDNIoNIEObj().getCodDNIoNIE());
-					System.out.println("Nombre: " + e.getCodDNIoNIEObj().getNombre());
+				if(h.getEstancias().size() != 0)
+				{
+					System.out.println("Esta habitacione tiene " + h.getEstancias().size() + " estancia(s)");
+					for (Estancias e : h.getEstancias()) {
+						System.out.println("|**********************************|");
+						System.out.println("DNI: " + e.getCodDNIoNIEObj().getCodDNIoNIE());
+						System.out.println("Nombre: " + e.getCodDNIoNIEObj().getNombre());
 
-					System.out.println("Fecha Inicio: " + e.getFechaInicio());
-					System.out.println("Fecha Fin: " + e.getFechaFin());
-					System.out.println("Precio Pagado: " + e.getPrecioestancia());
-					System.out.println("|**********************************|");
+						System.out.println("Fecha Inicio: " + e.getFechaInicio());
+						System.out.println("Fecha Fin: " + e.getFechaFin());
+						System.out.println("Precio Pagado: " + e.getPrecioestancia());
+						System.out.println("|**********************************|");
+					}
 				}
+				
 				System.out.println("|-------------------------------------/");
-				sesion.getTransaction().commit();
+				
 			}
+			sesion.getTransaction().commit();
 
 		} catch (Exception e) {
 			System.err.print("Ha ocurrido el siguiente error: ");
